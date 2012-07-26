@@ -46,12 +46,27 @@ $ ->
     touch = {}
 
 if $.support.touch
-  $('body').bind 'click', (e) -> 
-    e.preventDefault()
+  $('body').on 'click', (e) ->
+    target = $(e.target)
+
+    unless target.attr('href')? or target.is 'input' or target.is 'label'
+      e.preventDefault()
+
+  $ ->
+    # Fix for tapping on submit button
+    $('body').on 'tap', 'input[type=submit]', (e) ->
+      e.preventDefault()
+      $(e.target.form).trigger 'submit'
+
+    # Fix for tapping on labels
+    $('body').on 'tap', 'label', (e) ->
+      e.preventDefault()
+      $("input##{e.target.htmlFor}").trigger 'click'
+
 else
-  $ -> 
-    $('body').bind 'click', (e) -> 
-      $(e.target).trigger('tap') 
+  $ ->
+    $('body').on 'click', (e) ->
+      $(e.target).trigger 'tap'
 
 types = ['swipe', 
          'swipeLeft', 
