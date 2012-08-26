@@ -49,7 +49,7 @@ if $.support.touch
   $('body').on 'click', (e) ->
     target = $(e.target)
 
-    unless target.attr('href')? or target.is 'input' or target.is 'label'
+    if !(target.attr('href')? or target.is 'input' or target.is 'label')  || window.preventClicks is true
       e.preventDefault()
 
   $ ->
@@ -57,6 +57,15 @@ if $.support.touch
     $('body').on 'tap', 'input[type=submit]', (e) ->
       e.preventDefault()
       $(e.target.form).trigger 'submit'
+
+    # set global preventClicks=true so that we don't prevent click event on <a>
+    $('body').on 'tap', (e) ->
+      target = $(e.target)
+      unless target.attr('href')? or target.is 'input' or target.is 'label'
+        window.preventClicks = true;
+        setTimeout( ->
+          window.preventClicks = false
+        , 400)
 
     # Fix for tapping on labels
     $('body').on 'tap', 'label', (e) ->
