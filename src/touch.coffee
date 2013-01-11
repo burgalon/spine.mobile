@@ -17,6 +17,7 @@ swipeDirection = (x1, x2, y1, y2) ->
     if y1 - y2 > 0 then 'Up' else 'Down'
 
 $ ->
+  return if window.Zepto
   $('body').bind 'touchstart', (e) ->
     e     = e.originalEvent
     now   = Date.now()
